@@ -26,8 +26,7 @@ router.post('/', async (req, res) => {
     let system = req.headers['sec-ch-ua-platform'];
     console.log(DVC.os.name)
     const subscription = JSON.stringify(req.body.subscription);
-    console.log(system, DVC.os.name == 'Windows', DVC.os.name)
-    // console.log((req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac"))
+    console.log(!(DVC.os.name === 'Windows' || DVC.os.name === 'Android' || DVC.os.name === 'Mac'))
     if (!(DVC.os.name === 'Windows' || DVC.os.name === 'Android' || DVC.os.name === 'Mac')) {
         system = "Others"
     }
@@ -41,6 +40,7 @@ router.post('/', async (req, res) => {
         let user = await Visitor.findOne({ user_ip: user_ip });
         if (user) {
             const newRow = {
+                country,
                 device,
                 track_id: 'AAD76SD',
                 system,
