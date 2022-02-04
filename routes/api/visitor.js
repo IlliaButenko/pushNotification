@@ -15,15 +15,15 @@ const { lookup } = require('geoip-lite');
 // @desc     Register user
 // @access   Public
 router.post('/', async (req, res) => {
-    console.log('this is visitor')
     const detector = new DeviceDetector;
-
+    console.log(detector.detect(req.headers['user-agent']))
     const device = detector.detect(req.headers['user-agent']).device.model;
     var user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-    // const country = lookup(user_ip).country;
-    console.log(lookup(user_ip).country)
-    const country = 'U S A'
+    const country = lookup(user_ip).country;
+    // console.log(lookup(user_ip).country)
+    // const country = 'U S A'
     let system = req.headers['sec-ch-ua-platform'];
+    console.log(system)
     const subscription = JSON.stringify(req.body.subscription);
     // console.log(system, req.headers['sec-ch-ua-platform'] == "Windows", req.headers['sec-ch-ua-platform'])
     // console.log((req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac"))
