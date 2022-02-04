@@ -1,0 +1,2 @@
+(this.webpackJsonpcrema=this.webpackJsonpcrema||[]).push([[20],{1272:function(e,t,c){"use strict";c.r(t);c(0);var r=c(1);t.default=function(){return Object(r.jsx)(r.Fragment,{children:Object(r.jsx)("div",{children:"Reports"})})}}}]);
+//# sourceMappingURL=20.fc2f528a.chunk.js.map

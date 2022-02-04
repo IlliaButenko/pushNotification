@@ -1,0 +1,47 @@
+{
+  "name": "crema_api",
+  "version": "1.0.0",
+  "description": "Crema API with Mongo server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "admin": "node admin",
+    "prod-client": "NODE_ENV=production node server",
+    "prod-admin": "NODE_ENV=production node admin",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false"
+  },
+  "author": "Crema Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "geoip-country": "^4.0.95",
+    "geoip-lite": "^1.4.3",
+    "gravatar": "^1.8.0",
+    "http-proxy-middleware": "^2.0.1",
+    "https-proxy-agent": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongodb": "^4.2.2",
+    "mongodb-backup-v2": "^1.0.4",
+    "mongodb-restore-v2": "^1.0.1",
+    "mongoose": "^5.9.5",
+    "multer": "^1.4.4",
+    "node-device-detector": "^1.4.3",
+    "normalize-url": "^5.0.0",
+    "query-string": "^7.0.1",
+    "request": "^2.88.2",
+    "tgl": "^1.1.3",
+    "web-push": "^3.4.5",
+    "ws": "^8.2.3"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.2"
+  }
+}

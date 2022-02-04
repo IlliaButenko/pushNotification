@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb://blockchain:r5PDZ5wAJgfXPPZz@127.0.0.1:27119/blockchaindb?serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256",
+  "jwtSecret": "secret"
+}
