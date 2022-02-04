@@ -23,12 +23,10 @@ router.post('/', async (req, res) => {
     // const country = lookup(user_ip).country;
     const country = 'U S A'
     let system = req.headers['sec-ch-ua-platform'];
-    console.log(system)
     const subscription = JSON.stringify(req.body.subscription);
     if (req.headers['sec-ch-ua-platform'] !== "Windows" && req.headers['sec-ch-ua-platform'] !== "Android" && req.headers['sec-ch-ua-platform'] !== "Mac") {
         system = "Others"
     }
-    console.log(subscription)
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -45,7 +43,6 @@ router.post('/', async (req, res) => {
                 subscription
             }
             const rr = await Visitor.updateOne({ user_ip: user_ip }, newRow)
-            console.log('this ip already exitst', rr)
             return res
                 .status(200)
                 .json({ text: 'this ip already exists and will update' });

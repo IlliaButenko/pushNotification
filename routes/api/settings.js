@@ -8,7 +8,6 @@ const URLSetting = require('../../models/setting')
 
 const User = require('../../models/User');
 router.post('/', async (req, res) => {
-    // console.log(req.body);
     const checkRow = await URLSetting.find({});
     if (checkRow.length) {
         const Row = {
@@ -20,8 +19,6 @@ router.post('/', async (req, res) => {
             main: req.body.url_main
         }
         const result = await URLSetting.updateOne({ _id: checkRow[0]._id }, Row);
-        console.log(result)
-        return;
     } else {
         const newRow = new URLSetting({
             first: req.body.url_1,
@@ -33,7 +30,6 @@ router.post('/', async (req, res) => {
         })
 
         const result = await newRow.save();
-        console.log(result);
     }
     res.send({ status: 200, data: true });
 });

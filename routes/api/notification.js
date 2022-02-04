@@ -19,8 +19,8 @@ router.post('/send', async (req, res) => {
     for (let i = 0; i < allVisitor.length; i++) {
         const subscription = JSON.parse(allVisitor[i].subscription);
         webpush.sendNotification(subscription, payload)
-            .then(result => console.log(result))
-            .catch(e => console.log(e.stack, '--------------------errorrrrrrr'))
+            .then(result => console.log('success'))
+            .catch(e => console.log('error'))
     }
     // return res.json(true)
 }
