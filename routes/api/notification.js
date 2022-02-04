@@ -22,7 +22,7 @@ router.post('/send', async (req, res) => {
             .then(result => console.log('success'))
             .catch(e => console.log('error'))
     }
-    // return res.json(true)
+    return res.json(true)
 }
 );
 
