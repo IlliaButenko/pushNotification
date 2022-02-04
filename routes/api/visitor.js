@@ -44,6 +44,7 @@ router.post('/', async (req, res) => {
                 subscription
             }
             const rr = await Visitor.updateOne({ user_ip: user_ip }, newRow)
+            console.log(subscription, '---')
             console.log(user, '\nupdate--------------\n', rr)
             return res
                 .status(200)
