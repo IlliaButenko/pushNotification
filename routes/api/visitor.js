@@ -17,19 +17,20 @@ const { lookup } = require('geoip-lite');
 router.post('/', async (req, res) => {
     const detector = new DeviceDetector;
     console.log(detector.detect(req.headers['user-agent']))
-    const device = detector.detect(req.headers['user-agent']).device.model;
+    const DVC = detector.detect(req.headers['user-agent'])
+    const device = DVC.device.model;
     var user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
     const country = lookup(user_ip).country;
     // console.log(lookup(user_ip).country)
     // const country = 'U S A'
     let system = req.headers['sec-ch-ua-platform'];
-    console.log(system)
+    console.log(DVC.os.name)
     const subscription = JSON.stringify(req.body.subscription);
-    // console.log(system, req.headers['sec-ch-ua-platform'] == "Windows", req.headers['sec-ch-ua-platform'])
+    console.log(system, DVC.os.name == 'Windows', DVC.os.name)
     // console.log((req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac"))
-    // if (!(req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac")) {
-    //     system = "Others"
-    // }
+    if (!(DVC.os.name === 'Windows' || DVC.os.name === 'Android' || DVC.os.name === 'Mac')) {
+        system = "Others"
+    }
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
