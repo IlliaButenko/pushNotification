@@ -15,7 +15,6 @@ const { lookup } = require('geoip-lite');
 // @desc     Register user
 // @access   Public
 router.post('/', async (req, res) => {
-    console.log('-----------------------------------req')
     const detector = new DeviceDetector;
 
     const device = detector.detect(req.headers['user-agent']).device.model;
