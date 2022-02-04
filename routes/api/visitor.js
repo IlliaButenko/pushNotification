@@ -18,14 +18,18 @@ router.post('/', async (req, res) => {
     const detector = new DeviceDetector;
 
     const device = detector.detect(req.headers['user-agent']).device.model;
-    const user_ip = req.connection.remoteAddress;
+    var user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    // const user_ip = req.connection.remoteAddress;
     // const country = lookup(user_ip).country;
     const country = 'U S A'
     let system = req.headers['sec-ch-ua-platform'];
     const subscription = JSON.stringify(req.body.subscription);
-    if (req.headers['sec-ch-ua-platform'] !== "Windows" && req.headers['sec-ch-ua-platform'] !== "Android" && req.headers['sec-ch-ua-platform'] !== "Mac") {
-        system = "Others"
-    }
+    // console.log(system, req.headers['sec-ch-ua-platform'] == "Windows", req.headers['sec-ch-ua-platform'])
+    // console.log((req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac"))
+    // if (!(req.headers['sec-ch-ua-platform'] === "Windows" || req.headers['sec-ch-ua-platform'] === "Android" || req.headers['sec-ch-ua-platform'] === "Mac")) {
+    //     system = "Others"
+    // }
+    console.log(user_ip)
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
