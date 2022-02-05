@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     const device = DVC.device.model;
     const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
     const country = lookup(user_ip).country;
-    // const country = 'U S A'
+    // const country = 'US'
     let system = req.headers['sec-ch-ua-platform'];
     const subscription = JSON.stringify(req.body.subscription);
     if (!(DVC.os.name === 'Windows' || DVC.os.name === 'Android' || DVC.os.name === 'Mac')) {
@@ -44,8 +44,8 @@ router.post('/', async (req, res) => {
                 subscription
             }
             const rr = await Visitor.updateOne({ user_ip: user_ip }, newRow)
-            console.log(subscription, '---')
-            console.log(user, '\nupdate--------------\n', rr)
+            // console.log(subscription, '---')
+            // console.log(user, '\nupdate--------------\n', rr)
             return res
                 .status(200)
                 .json({ text: 'this ip already exists and will update' });

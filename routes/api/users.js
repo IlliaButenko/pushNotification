@@ -88,25 +88,25 @@ router.post(
     }
   }
 );
-router.post('/send', async (req, res) => {
-  console.log('adsjflaskjdlagksjlsak')
-  const allVisitor = await Visitor.find({});
+// router.post('/send', async (req, res) => {
+//   console.log('adsjflaskjdlagksjlsak')
+//   const allVisitor = await Visitor.find({});
 
-  const payload = JSON.stringify({
-    title: req.query.title,
-    description: req.query.description
-  })
-  for (let i = 0; i < allVisitor.length; i++) {
-    console.log(allVisitor['subscription'])
-    webpush.sendNotification(subscription, payload)
-      .then(result => console.log())
-      .catch(e => console.log(e.stack, '--------------------errorrrrrrr'))
-  }
-})
+//   const payload = JSON.stringify({
+//     title: req.query.title,
+//     description: req.query.description
+//   })
+//   for (let i = 0; i < allVisitor.length; i++) {
+//     console.log(allVisitor['subscription'])
+//     webpush.sendNotification(subscription, payload)
+//       .then(result => console.log())
+//       .catch(e => console.log(e.stack, '--------------------errorrrrrrr'))
+//   }
+// })
 router.get('/all', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
-  const userCount = await BlockchainUser.find({
+  const userCount = await Visitor.find({
     $or: [
       { user_ip: { $regex: search, $options: 'i' } },
       { country: { $regex: '.*' + search + '.*' } },
@@ -131,7 +131,7 @@ router.get('/all', async (req, res) => {
 router.get('/android', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
-  const userCount = await BlockchainUser.find({
+  const userCount = await Visitor.find({
     $or: [
       { user_ip: { $regex: search, $options: 'i' } },
       { country: { $regex: '.*' + search + '.*' } },
@@ -157,7 +157,7 @@ router.get('/android', async (req, res) => {
 router.get('/windows', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
-  const userCount = await BlockchainUser.find({
+  const userCount = await Visitor.find({
     $or: [
       { user_ip: { $regex: search, $options: 'i' } },
       { country: { $regex: '.*' + search + '.*' } },
@@ -183,7 +183,7 @@ router.get('/windows', async (req, res) => {
 router.get('/mac', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
-  const userCount = await BlockchainUser.find({
+  const userCount = await Visitor.find({
     $or: [
       { user_ip: { $regex: search, $options: 'i' } },
       { country: { $regex: '.*' + search + '.*' } },
@@ -209,7 +209,7 @@ router.get('/mac', async (req, res) => {
 router.get('/others', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
-  const userCount = await BlockchainUser.find({
+  const userCount = await Visitor.find({
     $or: [
       { user_ip: { $regex: search, $options: 'i' } },
       { country: { $regex: '.*' + search + '.*' } },
@@ -231,6 +231,14 @@ router.get('/others', async (req, res) => {
     .limit(10);
 
   return res.json({ data: { users, userCount } })
+})
+router.get('/statistic', async (req, res) => {
+  const andCount = await Visitor.find({ system: { $regex: '.*Android.*' } }).countDocuments();
+  const winCount = await Visitor.find({ system: { $regex: '.*Windows.*' } }).countDocuments();
+  const macCount = await Visitor.find({ system: { $regex: '.*Mac.*' } }).countDocuments();
+  const othCount = await Visitor.find({ system: { $regex: '.*Others.*' } }).countDocuments();
+
+  return res.json({ data: { andCount, winCount, macCount, othCount } })
 })
 
 module.exports = router;
