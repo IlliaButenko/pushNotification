@@ -18,7 +18,7 @@ app.get('/.well-known/acme-challenge/kl1VnngH5yqSdCBD4By-AiV3uSLCspupBtfgDocPAT4
 // Connect Database
 connectDB();
 // Configuration
-const PORT = process.env.PORT || '3001';
+const PORT = process.env.PORT || '3005';
 const HOST = process.env.HOST || "localhost";
 
 // Init Middleware
