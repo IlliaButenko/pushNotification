@@ -24,7 +24,7 @@ router.post('/send', async (req, res) => {
             const visitor = await Visitor.find({ system: { $regex: '.*' + sysValue[i].title + '.*' } })
             const visitorLength = visitor.length;
             if (methodValue === 'Individual' && visitorLength > 0) {
-                if (visitorLength >= userNo) {
+                if (visitorLength > parseInt(userNo) - 1) {
                     const subscription = JSON.parse(visitor[parseInt(userNo) - 1].subscription);
                     sendNotification(subscription, payload);
                 }
