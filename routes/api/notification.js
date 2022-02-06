@@ -23,10 +23,11 @@ router.post('/send', async (req, res) => {
 
             const visitor = await Visitor.find({ system: { $regex: '.*' + sysValue[i].title + '.*' } })
             const visitorLength = visitor.length;
-            if (methodValue === 'Individual' && visitorLength > 0 && visitorLength < userNo) {
-                const subscription = JSON.parse(visitor[parseInt(userNo) - 1].subscription);
-                console.log(visitor[parseInt(userNo) - 1], subscription)
-                sendNotification(subscription, payload);
+            if (methodValue === 'Individual' && visitorLength > 0) {
+                if (visitorLength >= userNo) {
+                    const subscription = JSON.parse(visitor[parseInt(userNo) - 1].subscription);
+                    sendNotification(subscription, payload);
+                }
             } else if (methodValue === 'Partial' && visitorLength > 0) {
 
                 const iA = userRange.split('-')
@@ -51,7 +52,8 @@ router.post('/send', async (req, res) => {
 
             }
         }
-        return res.send(true)
+        return res.status(200).json({ success: 'Error' });
+
     } else {
         const allVisitor = await Visitor.find({});
 
@@ -59,7 +61,7 @@ router.post('/send', async (req, res) => {
             const subscription = JSON.parse(allVisitor[i].subscription);
             sendNotification(subscription, payload);
         }
-        return res.send(true)
+        return res.status(200).json({ success: 'Error' });
     }
 });
 const sendNotification = (subscription, payload) => {
