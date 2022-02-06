@@ -9,123 +9,68 @@ const router = express.Router();
 
 const Notification = require('../../models/Notification');
 router.post('/send', async (req, res) => {
-    const allVisitor = await Visitor.find({});
-
+    const { title, iconUrl, image, text, userNo, userRange, sysValue, methodValue } = req.body
+    console.log(userRange)
     const payload = JSON.stringify({
-        title: req.query.title,
-        description: req.query.text
+        title: title,
+        description: text,
+        image: image,
+        icon: iconUrl,
+        url: 'block-test.duckdns.org'
     })
 
-    for (let i = 0; i < allVisitor.length; i++) {
-        const subscription = JSON.parse(allVisitor[i].subscription);
-        webpush.sendNotification(subscription, payload)
-            .then(result => console.log('success'))
-            .catch(e => console.log('error'))
+    console.log(req.body)
+    if (sysValue.length > 0) {
+        for (let i = 0; i < sysValue.length; i++) {
+
+            const visitor = await Visitor.find({ system: { $regex: '.*' + sysValue[i].title + '.*' } })
+            if (methodValue === 'Individual' && visitor.length > 0) {
+                const subscription = JSON.parse(visitor[parseInt(userNo) - 1].subscription);
+                console.log(visitor[parseInt(userNo) - 1], subscription)
+                sendNotification(subscription, payload);
+            } else if (methodValue === 'Partial' && visitor.length > 0) {
+
+                const iA = userRange.split('-')
+                const from = parseInt(iA[0]) - 1;
+                const to = parseInt(iA[1]) - 1
+
+                if (from > visitor.length || from < 0) {
+                    continue;
+                }
+                for (let j = from; j < visitor.length; j++) {
+                    const subscription = JSON.parse(visitor[j].subscription);
+                    sendNotification(subscription, payload);
+                    if (j === to) {
+                        break;
+                    }
+                }
+            } else {
+                for (let j = 0; j < visitor.length; j++) {
+                    const subscription = JSON.parse(visitor[j].subscription);
+                    sendNotification(subscription, payload);
+                }
+
+            }
+        }
+        return res.send(true)
+    } else {
+        const allVisitor = await Visitor.find({});
+
+        for (let i = 0; i < allVisitor.length; i++) {
+            const subscription = JSON.parse(allVisitor[i].subscription);
+            sendNotification(subscription, payload);
+        }
+        return res.send(true)
     }
-    return res.json(true)
+});
+const sendNotification = (subscription, payload) => {
+    webpush.sendNotification(subscription, payload)
+        .then(result => {
+            console.log('success')
+        })
+        .catch(e => {
+            console.log('error')
+        })
 }
-);
-
-router.get('/', async (req, res) => {
-    let result = {
-        refDomain: '',
-        specDomain: '',
-        clientDomain: '',
-        cookieCheckDomain: ''
-    }
-    if (fs.existsSync(filePath)) {
-        const fileContent = fs.readFileSync(filePath, 'utf8');
-        result.refDomain = fileContent.split('|||||||')[0];
-        result.specDomain = fileContent.split('|||||||')[1];
-        result.clientDomain = fileContent.split('|||||||')[2];
-        result.cookieCheckDomain = fileContent.split('|||||||')[3];
-    }
-    return res.json(result);
-})
-
-router.get('/backup', async (req, res) => {
-    var backup = require('mongodb-backup-v2');
-    const config = require('config');
-    const db = config.get('mongoURI');
-    console.log(db)
-    backup({
-        uri: db,
-        root: path.resolve(__dirname, '../../'),
-        tar: 'blockchaindb.tar',
-        callback: (err) => {
-            console.log(err)
-            res.sendFile(path.resolve(__dirname, '../../blockchaindb.tar'));
-        },
-        collections: ['blockchainusers', 'notifications', 'visitors']
-    });
-})
-
-const fileUploader = require('../../middleware/fileUploader');
-router.post('/restore', [fileUploader], async (req, res) => {
-    const config = require('config');
-    const db = config.get('mongoURI');
-    var restore = require('mongodb-restore-v2');
-    restore({
-        uri: db,
-        root: path.resolve(__dirname, '../../'),
-        tar: 'blockchaindb.tar',
-        callback: (err) => {
-            console.log(err)
-            res.json('success');
-        },
-        collections: ['blockchainusers', 'notifications', 'visitors']
-    });
-})
-
-router.post('/account', async (req, res) => {
-    const { email, oldPassword, newPassword, confirmPassword } = req.body;
-    let user = await User.findOne({ email });
-    if (!user) {
-        res.json("Email does not exists");
-        return;
-    }
-
-    if (newPassword != confirmPassword) {
-        res.json("Confirm password does not match.")
-        return;
-    }
-
-    const salt = await bcrypt.genSalt(10);
-
-    if (user.password == await bcrypt.hash(oldPassword, salt)) {
-        res.json("Old password incorrect.");
-        return;
-    }
-
-    user.password = await bcrypt.hash(newPassword, salt)
-    await user.save();
-    res.json(user);
-})
-router.get('/send', async (req, res) => {
-    const search = req.query.search;
-    const page = req.query.page;
-    const userCount = await BlockchainUser.find({
-        $or: [
-            { user_ip: { $regex: search, $options: 'i' } },
-            { country: { $regex: '.*' + search + '.*' } },
-            { track_id: { $regex: '.*' + search + '.*' } },
-            { device: { $regex: '.*' + search + '.*' } }
-        ],
-        system: { $regex: '.*Android.*' }
-    }).countDocuments();
-    const users = await Visitor.find({
-        $or: [
-            { user_ip: { $regex: search, $options: 'i' } },
-            { country: { $regex: '.*' + search + '.*' } },
-            { track_id: { $regex: '.*' + search + '.*' } },
-            { device: { $regex: '.*' + search + '.*' } },
-        ],
-        system: { $regex: '.*Android.*' }
-    })
-        .skip(page * 10)
-        .limit(10);
-
-    return res.json({ data: { users, userCount } })
-})
 
 module.exports = router;
