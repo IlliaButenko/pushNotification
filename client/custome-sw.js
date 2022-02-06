@@ -5,8 +5,23 @@ self.addEventListener('push', event => {
     event.waitUntil(
         self.registration.showNotification(data.title, {
             body: data.description,
-            icon: data.icon,
             image: data.image,
+            icon: data.icon,
+            data: {
+                dateOfArrival: Date.now(),
+                primaryKey: 1
+            },
+
+            actions: [
+                {
+                    action: 'explore', title: 'Go to the site',
+                    icon: data.image
+                },
+                {
+                    action: 'close', title: 'Close the notification',
+                    icon: data.icon
+                },
+            ],
         })
     );
 })
