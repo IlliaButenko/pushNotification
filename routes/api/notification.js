@@ -9,13 +9,13 @@ const router = express.Router();
 
 const Notification = require('../../models/Notification');
 router.post('/send', async (req, res) => {
-    const { title, iconUrl, image, text, userNo, userRange, sysValue, methodValue } = req.body
+    const { title, iconUrl, image, linkUrl, text, userNo, userRange, sysValue, methodValue } = req.body
     const payload = JSON.stringify({
         title: title,
         description: text,
         image: image,
         icon: iconUrl,
-        url: 'block-test.duckdns.org'
+        url: linkUrl,
     })
 
     if (sysValue.length > 0) {
