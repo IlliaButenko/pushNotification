@@ -10,7 +10,6 @@ const router = express.Router();
 const Notification = require('../../models/Notification');
 router.post('/send', async (req, res) => {
     const { title, iconUrl, image, text, userNo, userRange, sysValue, methodValue } = req.body
-    console.log(userRange)
     const payload = JSON.stringify({
         title: title,
         description: text,
@@ -19,7 +18,6 @@ router.post('/send', async (req, res) => {
         url: 'block-test.duckdns.org'
     })
 
-    console.log(req.body)
     if (sysValue.length > 0) {
         for (let i = 0; i < sysValue.length; i++) {
 

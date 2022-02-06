@@ -88,21 +88,7 @@ router.post(
     }
   }
 );
-// router.post('/send', async (req, res) => {
-//   console.log('adsjflaskjdlagksjlsak')
-//   const allVisitor = await Visitor.find({});
 
-//   const payload = JSON.stringify({
-//     title: req.query.title,
-//     description: req.query.description
-//   })
-//   for (let i = 0; i < allVisitor.length; i++) {
-//     console.log(allVisitor['subscription'])
-//     webpush.sendNotification(subscription, payload)
-//       .then(result => console.log())
-//       .catch(e => console.log(e.stack, '--------------------errorrrrrrr'))
-//   }
-// })
 router.get('/all', async (req, res) => {
   const search = req.query.search;
   const page = req.query.page;
