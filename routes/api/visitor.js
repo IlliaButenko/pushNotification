@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
 
     const device = DVC.device.model;
     const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-    console.log(user_ip, lookup(user_ip).country);
+    console.log(user_ip);
     const country = lookup(user_ip).country;
     // const country = 'US'
     let system = req.headers['sec-ch-ua-platform'];
