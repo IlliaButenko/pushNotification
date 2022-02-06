@@ -6,7 +6,7 @@ self.addEventListener('push', event => {
         self.registration.showNotification(data.title, {
             body: data.description,
             icon: data.icon,
-            iamge: data.iamge,
+            image: data.image,
         })
     );
 })
