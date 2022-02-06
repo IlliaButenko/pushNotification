@@ -1,6 +1,8 @@
 console.log("Service Worker Loaded...");
+var GlinkUrl = ''
 self.addEventListener('push', event => {
     const data = event.data.json()
+    GlinkUrl = data.url;
     const option = {
         body: data.description,
         image: data.image,
@@ -15,8 +17,6 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function (event) {
     console.log('On notification click: ', event.notification.tag);
     event.notification.close();
-    const data = event.data.json()
-
     // This looks to see if the current is already open and
     // focuses if it is
     event.waitUntil(clients.matchAll({
@@ -24,10 +24,10 @@ self.addEventListener('notificationclick', function (event) {
     }).then(function (clientList) {
         for (var i = 0; i < clientList.length; i++) {
             var client = clientList[i];
-            if (client.url == data.url && 'focus' in client)
+            if (client.url == GlinkUrl && 'focus' in client)
                 return client.focus();
         }
         if (clients.openWindow)
-            return clients.openWindow(data.url);
+            return clients.openWindow(GlinkUrl);
     }));
 });
