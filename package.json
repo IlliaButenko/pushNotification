@@ -19,6 +19,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-useragent": "^1.0.15",
     "express-validator": "^6.4.0",
     "geoip-country": "^4.0.95",
     "geoip-lite": "^1.4.3",

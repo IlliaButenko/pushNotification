@@ -4,13 +4,14 @@ const connectDB = require('./config/db');
 const path = require('path');
 // const visitor = require('./middleware/visitor');
 const activeUser = require('./middleware/activeUser');
-
+const useragent = require('express-useragent');
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
 
 const app = express();
 
 app.use(cors())
+app.use(useragent.express());
 app.use(bodyParser.json())
 
 // Connect Database

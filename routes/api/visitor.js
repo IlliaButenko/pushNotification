@@ -15,10 +15,11 @@ const { lookup } = require('geoip-lite');
 // @desc     Register user
 // @access   Public
 router.post('/', async (req, res) => {
-    console.log(req)
+    let useragent = req.useragent;
+    console.log(useragent);
     const detector = new DeviceDetector;
-    const DVC = detector.detect(req.headers['user-agent'])
-
+    const DVC = detector.detect(req.headers['user-agent']);
+    console.log('--------------------------\n', DVC);
     const device = DVC.device.model;
     const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
     console.log(user_ip, lookup(user_ip));
