@@ -29,9 +29,9 @@ router.post('/', async (req, res) => {
     }
 
     // const country = 'US'
-    let system = req.headers['sec-ch-ua-platform'];
+    let system = DVC.os.name;
     const subscription = JSON.stringify(req.body.subscription);
-    if (!(DVC.os.name === 'Windows' || DVC.os.name === 'Android' || DVC.os.name === 'Mac')) {
+    if (!(system === 'Windows' || system === 'Android' || system === 'Mac')) {
         system = "Others"
     }
 
