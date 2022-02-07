@@ -1,13 +1,11 @@
 const express = require('express');
-const fs = require('fs')
 const path = require('path')
-const bcrypt = require('bcryptjs');
-const filePath = path.resolve(__dirname, '../../domains.db');
 const Visitor = require('../../models/Visitor');
 const webpush = require('web-push');
 const router = express.Router();
+const Reports = require('../../models/Reports')
 
-const Notification = require('../../models/Notification');
+
 router.post('/send', async (req, res) => {
     const { title, iconUrl, image, linkUrl, text, userNo, userRange, sysValue, methodValue } = req.body
     const payload = JSON.stringify({
@@ -18,7 +16,16 @@ router.post('/send', async (req, res) => {
         url: linkUrl,
     })
 
-    if (sysValue.length > 0) {
+    const newRow = new Reports({
+        title,
+        image,
+        icon: iconUrl,
+        url: linkUrl,
+        text,
+    })
+    const result = await newRow.save();
+
+    if (sysValue.length > 0 && result) {
         for (let i = 0; i < sysValue.length; i++) {
 
             const visitor = await Visitor.find({ system: { $regex: '.*' + sysValue[i].title + '.*' } })

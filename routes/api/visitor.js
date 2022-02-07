@@ -15,6 +15,7 @@ const { lookup } = require('geoip-lite');
 // @desc     Register user
 // @access   Public
 router.post('/', async (req, res) => {
+    console.log(req)
     const detector = new DeviceDetector;
     const DVC = detector.detect(req.headers['user-agent'])
 
@@ -25,6 +26,7 @@ router.post('/', async (req, res) => {
     if (lookup(user_ip)) {
         country = lookup(user_ip).country;
     }
+
     // const country = 'US'
     let system = req.headers['sec-ch-ua-platform'];
     const subscription = JSON.stringify(req.body.subscription);

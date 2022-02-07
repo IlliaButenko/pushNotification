@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cors());
 // Define Route
 app.use('/admin/api/users', require('./routes/api/users'));
-app.use('/admin/api/proxies', require('./routes/api/proxies'));
+app.use('/admin/api/reports', require('./routes/api/reports'));
 app.use('/admin/api/auth', require('./routes/api/auth'));
 app.use('/admin/api/settings', require('./routes/api/settings'));
 app.use('/admin/api/notification', require('./routes/api/notification'));
