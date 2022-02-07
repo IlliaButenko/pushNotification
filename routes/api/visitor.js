@@ -16,13 +16,10 @@ const { lookup } = require('geoip-lite');
 // @access   Public
 router.post('/', async (req, res) => {
     let useragent = req.useragent;
-    console.log(useragent);
     const detector = new DeviceDetector;
     const DVC = detector.detect(req.headers['user-agent']);
-    console.log('--------------------------\n', DVC);
     const device = DVC.device.model;
     const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-    console.log(user_ip, lookup(user_ip));
     let country = 'Unknown';
     if (lookup(user_ip)) {
         country = lookup(user_ip).country;
@@ -30,11 +27,13 @@ router.post('/', async (req, res) => {
 
     // const country = 'US'
     let system = DVC.os.name;
+
+    console.log(system)
     const subscription = JSON.stringify(req.body.subscription);
     if (!(system === 'Windows' || system === 'Android' || system === 'Mac')) {
         system = "Others"
     }
-
+    console.log(system)
     const errors = validationResult(req);
     console.log('-------------------------------------------------------\n', errors);
     if (!errors.isEmpty()) {
