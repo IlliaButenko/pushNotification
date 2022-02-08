@@ -22,7 +22,8 @@ router.get('/getdata', async (req, res) => {
         ]
     })
         .skip(page * 10)
-        .limit(10);
+        .limit(10)
+        .sort({ updatedAt: -1 });
 
     return res.json({ data: { users, userCount } })
 })
