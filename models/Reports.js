@@ -22,6 +22,9 @@ const ReportsSchema = new mongoose.Schema({
     clicked: {
         type: Number,
     },
+    totalclicked: {
+        type: Number,
+    }
 }, {
     timestamps: true
 });
