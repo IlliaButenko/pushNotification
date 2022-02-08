@@ -8,25 +8,45 @@ const Reports = require('../../models/Reports')
 
 router.post('/send', async (req, res) => {
     const { title, iconUrl, image, linkUrl, text, userNo, userRange, sysValue, methodValue } = req.body
-    const payload = JSON.stringify({
-        title: title,
-        description: text,
-        image: image,
-        icon: iconUrl,
-        url: linkUrl,
-    })
+    let fromTo = ''
+    const sysLength = sysValue.length;
 
+    if (sysLength > 0) {
+        for (let i = 0; i < sysLength; i++) {
+            fromTo += sysValue[i].title + ' ';
+        }
+        if (methodValue === 'Individual') {
+            fromTo += '->' + methodValue + '->' + userNo ? userNo : 'undefiend';
+        } else if (methodValue === 'Partial') {
+            fromTo += '->' + methodValue + '->' + userRange ? userRange : 'undefiend';
+        } else {
+            fromTo += '->' + methodValue + '->All';
+        }
+    } else {
+        fromTo = "ALL"
+    }
     const newRow = new Reports({
         title,
         image,
         icon: iconUrl,
         url: linkUrl,
         text,
+        fromTo,
+        clicked: 0,
     })
     const result = await newRow.save();
 
-    if (sysValue.length > 0 && result) {
-        for (let i = 0; i < sysValue.length; i++) {
+    const payload = JSON.stringify({
+        title: title,
+        description: text,
+        image: image,
+        icon: iconUrl,
+        url: linkUrl,
+        n_id: newRow._id,
+    })
+
+    if (sysLength > 0 && result) {
+        for (let i = 0; i < sysLength; i++) {
 
             const visitor = await Visitor.find({ system: { $regex: '.*' + sysValue[i].title + '.*' } })
             const visitorLength = visitor.length;
@@ -71,6 +91,18 @@ router.post('/send', async (req, res) => {
         return res.status(200).json({ success: 'Error' });
     }
 });
+
+router.post('/clickEvent', async (req, res) => {
+    const { title, description, n_id } = req.body;
+    const matchRow = await Reports.findOne({ _id: n_id })
+    if (matchRow) {
+        const result = await Reports.findOneAndUpdate({ _id: n_id }, { clicked: parseInt(matchRow.clicked) + 1 })
+        if (result) {
+            res.send({ status: 200, data: true })
+        } else
+            res.send({ status: 200, data: true })
+    }
+})
 const sendNotification = (subscription, payload) => {
     webpush.sendNotification(subscription, payload)
         .then(result => {

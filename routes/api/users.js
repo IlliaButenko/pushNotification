@@ -6,14 +6,11 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
-const https = require('https')
-const fs = require('fs')
 const path = require('path')
-const domainsFilePath = path.resolve(__dirname, '../../domains.db');
 
 const User = require('../../models/User');
-const BlockchainUser = require('../../models/BlockchainUser');
 const Visitor = require('../../models/Visitor');
+const Reports = require('../../models/Reports')
 
 // @route    POST api/users
 // @desc     Register user
@@ -226,5 +223,33 @@ router.get('/statistic', async (req, res) => {
 
   return res.json({ data: { andCount, winCount, macCount, othCount } })
 })
+router.get('/getDashboardData', async (req, res) => {
+  const DATE = new Date();
+  DATE.setDate(DATE.getDate() - 7);
+
+  const andCount = await Visitor.find({ system: { $regex: '.*Android.*' } }).countDocuments();
+  const winCount = await Visitor.find({ system: { $regex: '.*Windows.*' } }).countDocuments();
+  const macCount = await Visitor.find({ system: { $regex: '.*Mac.*' } }).countDocuments();
+  const othCount = await Visitor.find({ system: { $regex: '.*Others.*' } }).countDocuments();
+  const totalVisitor = await Visitor.find({ createdAt: { $gt: DATE } }).countDocuments();
+  const recentReports = await Reports.find().sort({ updatedAt: -1 }).limit(10);
+  const clickResult = await Reports.find({ createdAt: { $gt: DATE } });
+  let totalClicked = 0;
+  for (let i = 0; i < clickResult.length; i++) {
+    totalClicked += clickResult[i].clicked;
+  }
+  return res.json({
+    data: {
+      andCount,
+      winCount,
+      macCount,
+      othCount,
+      recentReports,
+      totalClicked,
+      totalVisitor
+    }
+  })
+})
+
 
 module.exports = router;

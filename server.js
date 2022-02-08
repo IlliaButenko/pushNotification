@@ -22,6 +22,8 @@ webpush.setVapidDetails("mailto: `rStarboy0809@gmail.com`", "BKIYNnyV8kwAYKkyw8u
 
 app.use('/users/api/users', require('./routes/api/visitor'));
 app.use('/users/api/urls', require('./routes/api/settings'));
+app.use('/users/api/notification', require('./routes/api/notification'));
+
 
 // Configuration
 const PORT = process.env.PORT || '3002';

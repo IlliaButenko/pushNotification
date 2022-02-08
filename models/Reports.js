@@ -15,7 +15,15 @@ const ReportsSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-    }
+    },
+    fromTo: {
+        type: String,
+    },
+    clicked: {
+        type: Number,
+    },
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('reports', ReportsSchema);

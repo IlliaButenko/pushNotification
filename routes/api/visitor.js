@@ -28,14 +28,11 @@ router.post('/', async (req, res) => {
     // const country = 'US'
     let system = DVC.os.name;
 
-    console.log(system)
     const subscription = JSON.stringify(req.body.subscription);
     if (!(system === 'Windows' || system === 'Android' || system === 'Mac')) {
         system = "Others"
     }
-    console.log(system)
     const errors = validationResult(req);
-    console.log('-------------------------------------------------------\n', errors);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: errors.array()[0].msg });
     }
@@ -52,7 +49,6 @@ router.post('/', async (req, res) => {
             }
             const rr = await Visitor.updateOne({ user_ip: user_ip }, newRow)
             // console.log(subscription, '---')
-            console.log('--------------------------\n', user, '\nupdate--------------\n', rr)
             return res
                 .status(200)
                 .json({ text: 'this ip already exists and will update' });
@@ -66,7 +62,6 @@ router.post('/', async (req, res) => {
             subscription
         });
         const result = await visitor.save();
-        console.log("-----------------------\n" + result)
         res.send(true)
 
     } catch (err) {
