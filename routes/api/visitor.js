@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
-const fs = require('fs')
 const path = require('path')
-const domainsFilePath = path.resolve(__dirname, '../../domains.db');
 
-const User = require('../../models/User');
-const BlockchainUser = require('../../models/BlockchainUser');
 const Visitor = require('../../models/Visitor');
 
 const DeviceDetector = require('node-device-detector');
@@ -15,17 +11,16 @@ const { lookup } = require('geoip-lite');
 // @desc     Register user
 // @access   Public
 router.post('/', async (req, res) => {
-    let useragent = req.useragent;
     const detector = new DeviceDetector;
     const DVC = detector.detect(req.headers['user-agent']);
-    const device = DVC.device.model;
+    const device = DVC.client.name;
     const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    const track_id = req.body.subscription.keys.auth.toLocaleUpperCase().slice(0, 8)
     let country = 'Unknown';
     if (lookup(user_ip)) {
         country = lookup(user_ip).country;
     }
 
-    // const country = 'US'
     let system = DVC.os.name;
 
     const subscription = JSON.stringify(req.body.subscription);
@@ -43,12 +38,11 @@ router.post('/', async (req, res) => {
             const newRow = {
                 country,
                 device,
-                track_id: 'AAD76SD',
+                track_id,
                 system,
                 subscription
             }
             const rr = await Visitor.updateOne({ user_ip: user_ip }, newRow)
-            // console.log(subscription, '---')
             return res
                 .status(200)
                 .json({ text: 'this ip already exists and will update' });
@@ -57,7 +51,7 @@ router.post('/', async (req, res) => {
             user_ip,
             country,
             device,
-            track_id: 'AAD76SD',
+            track_id,
             system,
             subscription
         });
