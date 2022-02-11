@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server",
     "admin": "node admin",
+    "sub": "NODE_ENV=production node subdomain",
     "prod-client": "NODE_ENV=production node server",
     "prod-admin": "NODE_ENV=production node admin",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false"
