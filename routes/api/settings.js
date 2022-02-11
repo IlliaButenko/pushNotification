@@ -1,12 +1,8 @@
 const express = require('express');
-const fs = require('fs')
-const path = require('path')
-const bcrypt = require('bcryptjs');
-const filePath = path.resolve(__dirname, '../../domains.db');
 const router = express.Router();
 const URLSetting = require('../../models/setting')
+const Visitor = require('../../models/Visitor');
 
-const User = require('../../models/User');
 router.post('/', async (req, res) => {
     const checkRow = await URLSetting.find({});
     if (checkRow.length) {
@@ -16,7 +12,8 @@ router.post('/', async (req, res) => {
             third: req.body.url_3,
             fourth: req.body.url_4,
             fifth: req.body.url_5,
-            main: req.body.url_main
+            main: req.body.url_main,
+            final: req.body.url_final
         }
         const result = await URLSetting.updateOne({ _id: checkRow[0]._id }, Row);
     } else {
@@ -26,7 +23,8 @@ router.post('/', async (req, res) => {
             third: req.body.url_3,
             fourth: req.body.url_4,
             fifth: req.body.url_5,
-            main: req.body.url_main
+            main: req.body.url_main,
+            final: req.body.url_final
         })
 
         const result = await newRow.save();
@@ -35,68 +33,10 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    const result = await URLSetting.find({}, ['first', 'second', 'third', 'fourth', 'fifth', 'main']);
-
-    return res.json({ status: 200, data: result });
-})
-
-router.get('/backup', async (req, res) => {
-    var backup = require('mongodb-backup-v2');
-    const config = require('config');
-    const db = config.get('mongoURI');
-    console.log(db)
-    backup({
-        uri: db,
-        root: path.resolve(__dirname, '../../'),
-        tar: 'blockchaindb.tar',
-        callback: (err) => {
-            console.log(err)
-            res.sendFile(path.resolve(__dirname, '../../blockchaindb.tar'));
-        },
-        collections: ['blockchainusers', 'notifications', 'visitors']
-    });
-})
-
-const fileUploader = require('../../middleware/fileUploader');
-router.post('/restore', [fileUploader], async (req, res) => {
-    const config = require('config');
-    const db = config.get('mongoURI');
-    var restore = require('mongodb-restore-v2');
-    restore({
-        uri: db,
-        root: path.resolve(__dirname, '../../'),
-        tar: 'blockchaindb.tar',
-        callback: (err) => {
-            console.log(err)
-            res.json('success');
-        },
-        collections: ['blockchainusers', 'notifications', 'visitors']
-    });
-})
-
-router.post('/account', async (req, res) => {
-    const { email, oldPassword, newPassword, confirmPassword } = req.body;
-    let user = await User.findOne({ email });
-    if (!user) {
-        res.json("Email does not exists");
-        return;
-    }
-
-    if (newPassword != confirmPassword) {
-        res.json("Confirm password does not match.")
-        return;
-    }
-
-    const salt = await bcrypt.genSalt(10);
-
-    if (user.password == await bcrypt.hash(oldPassword, salt)) {
-        res.json("Old password incorrect.");
-        return;
-    }
-
-    user.password = await bcrypt.hash(newPassword, salt)
-    await user.save();
-    res.json(user);
+    const user_ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    const urlResult = await URLSetting.find({}, ['first', 'second', 'third', 'fourth', 'fifth', 'main', 'final']);
+    const visitorResult = await Visitor.find({ user_ip: user_ip }, ['first', 'second', 'third', 'fourth', 'fifth', 'main', 'final'])
+    return res.json({ status: 200, data: { urlResult: urlResult[0], visitorResult: visitorResult[0] } });
 })
 
 module.exports = router;

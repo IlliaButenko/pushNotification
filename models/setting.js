@@ -19,6 +19,9 @@ const Urlsetting = new mongoose.Schema({
     },
     main: {
         type: String,
+    },
+    final: {
+        type: String
     }
 
 }, { timestamps: true });

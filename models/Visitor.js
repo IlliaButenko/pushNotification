@@ -19,6 +19,27 @@ const VisitorSchema = new mongoose.Schema({
     },
     subscription: {
         type: String,
+    },
+    first: {
+        type: Boolean,
+    },
+    second: {
+        type: Boolean
+    },
+    third: {
+        type: Boolean,
+    },
+    fourth: {
+        type: Boolean,
+    },
+    fifth: {
+        type: Boolean,
+    },
+    main: {
+        type: Boolean,
+    },
+    final: {
+        type: Boolean
     }
 
 }, { timestamps: true });
