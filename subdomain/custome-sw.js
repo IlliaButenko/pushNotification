@@ -1,6 +1,7 @@
 console.log("Service Worker Loaded...");
+let data = {};
 self.addEventListener('push', event => {
-    const data = event.data.json()
+    data = event.data.json()
     const option = {
         body: data.description,
         image: data.image,
@@ -15,9 +16,6 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function (event) {
     console.log('On notification click: ', event.notification.tag);
     event.notification.close();
-    console.log(event)
-    const data = event.data.json()
-
     // This looks to see if the current is already open and
     // focuses if it is
     event.waitUntil(clients.matchAll({
