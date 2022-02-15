@@ -23,7 +23,7 @@ router.post('/send', async (req, res) => {
         totalclicked,
     })
 
-    const payload = JSON.stringify({
+    let payload = JSON.stringify({
         title: title,
         description: text,
         image: image,
@@ -42,6 +42,8 @@ router.post('/send', async (req, res) => {
                 if (visitorLength > parseInt(userNo) - 1) {
 
                     const subscription = JSON.parse(visitor[parseInt(userNo) - 1].subscription);
+                    const param = visitor[parseInt(userNo) - 1].track_id;
+                    payload.url = `${payload.url}?track=${param}`;
                     sendNotification(subscription, payload);
                 }
             } else if (methodValue === 'Partial' && visitorLength > 0) {
@@ -55,6 +57,8 @@ router.post('/send', async (req, res) => {
                 }
                 for (let j = from; j < visitorLength; j++) {
                     const subscription = JSON.parse(visitor[j].subscription);
+                    const param = visitor[j].track_id;
+                    payload.url = `${payload.url}?track=${param}`;
                     sendNotification(subscription, payload);
                     if (j === to) {
                         break;
@@ -64,6 +68,8 @@ router.post('/send', async (req, res) => {
                 totalclicked += visitor.length;
                 for (let j = 0; j < visitor.length; j++) {
                     const subscription = JSON.parse(visitor[j].subscription);
+                    const param = visitor[j].track_id;
+                    payload.url = `${payload.url}?track=${param}`;
                     sendNotification(subscription, payload);
                 }
 
@@ -78,6 +84,8 @@ router.post('/send', async (req, res) => {
         totalclicked = allVisitor.length;
         for (let i = 0; i < allVisitor.length; i++) {
             const subscription = JSON.parse(allVisitor[i].subscription);
+            const param = visitor[i].track_id;
+            payload.url = `${payload.url}?track=${param}`;
             sendNotification(subscription, payload);
         }
         // return res.status(200).json({ success: 'Error' });
