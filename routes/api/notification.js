@@ -23,7 +23,7 @@ router.post('/send', async (req, res) => {
         totalclicked,
     })
 
-    let payload = JSON.stringify{
+    let payload = {
         title: title,
         description: text,
         image: image,
