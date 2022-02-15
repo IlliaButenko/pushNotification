@@ -70,7 +70,7 @@ router.post('/send', async (req, res) => {
                     const subscription = JSON.parse(visitor[j].subscription);
                     const param = visitor[j].track_id;
                     payload.url = `${payload.url}?track=${param}`;
-                    console.log(param, 'param', payload, 'payload', visitor[j].'visitor[j]')
+                    console.log(param, 'param', payload, 'payload', visitor[j], 'visitor[j]')
                     sendNotification(subscription, payload);
                 }
 
