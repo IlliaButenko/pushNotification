@@ -125,7 +125,7 @@ router.post('/clickEvent', async (req, res) => {
     }
 })
 const sendNotification = (subscription, payload) => {
-    webpush.sendNotification(subscription, payload)
+    webpush.sendNotification(subscription, JSON.stringify(payload))
         .then(result => {
             console.log('success')
         })
