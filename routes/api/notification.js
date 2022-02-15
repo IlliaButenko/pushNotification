@@ -23,14 +23,14 @@ router.post('/send', async (req, res) => {
         totalclicked,
     })
 
-    let payload = JSON.stringify({
+    let payload = JSON.stringify{
         title: title,
         description: text,
         image: image,
         icon: iconUrl,
         url: linkUrl,
         n_id: newRow._id,
-    })
+    }
 
     if (sysLength > 0) {
         for (let i = 0; i < sysLength; i++) {
