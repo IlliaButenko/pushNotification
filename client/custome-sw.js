@@ -56,6 +56,5 @@ async function aa() {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-    }).then((response) => response.json())
-        .then((responseData) => { console.log(responseData) })
+    }).then((response) => { console.log(response) })
 }
