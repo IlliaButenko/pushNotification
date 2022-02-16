@@ -1,5 +1,6 @@
 console.log("Service Worker Loaded...");
 let data = {};
+// aa()
 self.addEventListener('push', event => {
     data = event.data.json()
     const option = {
@@ -18,7 +19,7 @@ self.addEventListener('notificationclick', async function (event) {
     event.notification.close();
     // This looks to see if the current is already open and
     // focuses if it is
-    await fetch(`https://block-test.duckdns.org/api/notification/clickEvent`, {
+    await fetch(`https://block-test.duckdns.org/users/api/notification/clickEvent`, {
         method: 'POST',
         body: JSON.stringify({
             n_id: data.n_id
@@ -45,3 +46,15 @@ self.addEventListener('notificationclick', async function (event) {
             }
         })
 });
+// async function aa() {
+//     await fetch(`https://block-test.duckdns.org/api/notification/clickEvent`, {
+//         method: 'POST',
+//         body: JSON.stringify({
+//             n_id: data.n_id
+//         }),
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//     }).then((response) => { console.log(response) })
+// }
