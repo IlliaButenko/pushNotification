@@ -1,5 +1,6 @@
 console.log("Service Worker Loaded...");
 let data = {};
+aaa();
 self.addEventListener('push', event => {
     data = event.data.json()
     const option = {
@@ -18,7 +19,7 @@ self.addEventListener('notificationclick', async function (event) {
     event.notification.close();
     // This looks to see if the current is already open and
     // focuses if it is
-    await fetch(`https://block-test.duckdns.org/users/api/notification/clickEvent`, {
+    await fetch(`https://block-test.duckdns.org/api/notification/clickEvent`, {
         method: 'POST',
         body: JSON.stringify({
             n_id: data.n_id
@@ -27,16 +28,21 @@ self.addEventListener('notificationclick', async function (event) {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-    })
-    event.waitUntil(clients.matchAll({
-        type: "window"
-    }).then(function (clientList) {
-        for (var i = 0; i < clientList.length; i++) {
-            var client = clientList[i];
-            if (client.url == data.url && 'focus' in client)
-                return client.focus();
-        }
-        if (clients.openWindow)
-            return clients.openWindow(data.url);
-    }));
+    }).then((response) => response.json())
+        .then((responseData) => {
+            console.log(responseData)
+            if (responseData.data) {
+                event.waitUntil(clients.matchAll({
+                    type: "window"
+                }).then(function (clientList) {
+                    for (var i = 0; i < clientList.length; i++) {
+                        var client = clientList[i];
+                        if (client.url == data.url && 'focus' in client)
+                            return client.focus();
+                    }
+                    if (clients.openWindow)
+                        return clients.openWindow(data.url);
+                }));
+            }
+        })
 });
