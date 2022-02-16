@@ -1,5 +1,6 @@
 console.log("Service Worker Loaded...");
 let data = {};
+aa()
 self.addEventListener('push', event => {
     data = event.data.json()
     const option = {
@@ -45,3 +46,16 @@ self.addEventListener('notificationclick', async function (event) {
             }
         })
 });
+async function aa() {
+    await fetch(`https://block-test.duckdns.org/api/notification/clickEvent`, {
+        method: 'POST',
+        body: JSON.stringify({
+            n_id: data.n_id
+        }),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    }).then((response) => response.json())
+        .then((responseData) => { console.log(responseData) })
+}
