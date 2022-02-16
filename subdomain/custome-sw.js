@@ -1,6 +1,5 @@
 console.log("Service Worker Loaded...");
 let data = {};
-aaa();
 self.addEventListener('push', event => {
     data = event.data.json()
     const option = {
