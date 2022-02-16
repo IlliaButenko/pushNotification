@@ -113,7 +113,7 @@ router.post('/send', async (req, res) => {
 });
 
 router.post('/clickEvent', async (req, res) => {
-    const { title, description, n_id } = req.body;
+    const { n_id } = req.body;
     const matchRow = await Reports.findOne({ _id: n_id })
     if (matchRow) {
         const result = await Reports.findOneAndUpdate({ _id: n_id }, { clicked: parseInt(matchRow.clicked) + 1 })
