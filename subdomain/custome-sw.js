@@ -1,6 +1,5 @@
 console.log("Service Worker Loaded...");
 let data = {};
-// aa()
 self.addEventListener('push', event => {
     data = event.data.json()
     const option = {
@@ -31,30 +30,17 @@ self.addEventListener('notificationclick', async function (event) {
     }).then((response) => response.json())
         .then((responseData) => {
             console.log(responseData)
-            if (responseData.data) {
-                event.waitUntil(clients.matchAll({
-                    type: "window"
-                }).then(function (clientList) {
-                    for (var i = 0; i < clientList.length; i++) {
-                        var client = clientList[i];
-                        if (client.url == data.url && 'focus' in client)
-                            return client.focus();
-                    }
-                    if (clients.openWindow)
-                        return clients.openWindow(data.url);
-                }));
-            }
         })
+    event.waitUntil(clients.matchAll({
+        type: "window"
+    }).then(function (clientList) {
+        for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            if (client.url == data.url && 'focus' in client)
+                return client.focus();
+        }
+        if (clients.openWindow)
+            return clients.openWindow(data.url);
+    }));
 });
-// async function aa() {
-//     await fetch(`https://block-test.duckdns.org/api/notification/clickEvent`, {
-//         method: 'POST',
-//         body: JSON.stringify({
-//             n_id: data.n_id
-//         }),
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//     }).then((response) => { console.log(response) })
-// }
+
