@@ -13,12 +13,12 @@ self.addEventListener('push', event => {
         self.registration.showNotification(data.title, option)
     );
 })
-self.addEventListener('notificationclick', async function (event) {
+self.addEventListener('notificationclick', function (event) {
     console.log('On notification click: ', event.notification.tag);
     event.notification.close();
     // This looks to see if the current is already open and
     // focuses if it is
-    await fetch(`https://block-test.duckdns.org/users/api/notification/clickEvent`, {
+    fetch(`https://block-test.duckdns.org/users/api/notification/clickEvent`, {
         method: 'POST',
         body: JSON.stringify({
             n_id: data.n_id
